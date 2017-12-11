@@ -10,15 +10,37 @@ public class PersonController {
 
     static Set<Person> databaseOfPeople = new HashSet<Person>();
 
-    // implement method for getting all people from database mapped to "/persons
+    @GetMapping("/persons")
+    public Set<Person> getDatabaseOfPeople(){
+        return databaseOfPeople;
+    }
 
-    // implement method for getting one person based on id mapped to "/person/{id}" if person with such id does not exists return null
+    @GetMapping("/person/{id}")
+    public Person getPerson(@PathVariable long id){
+        for(Person p : databaseOfPeople){
+            if(p.getId() == id){
+                return p;
+            }
+        }
+        return null;
+    }
 
-    // implement method for inserting/saving person mapped to "/person"
+    @PostMapping("/person")
+    public void safePerson(@RequestBody Person person){
+        databaseOfPeople.add(person);
+    }
 
-    // implement method for editing person mapped to "/person"
+    @PutMapping("/person")
+    public void editPerson(Person person){
+        Person personInDb = this.getPerson(person.getId());
+        personInDb.setName(person.getName());
+        personInDb.setSurname(person.getSurname());
+    }
 
-    // implement method for deleting person mapped to "/person/{id}"
-
+    @DeleteMapping("/person/{id}")
+    public void deletePerson(@PathVariable long id){
+        Person person = this.getPerson(id);
+        databaseOfPeople.remove(person);
+    }
 
 }

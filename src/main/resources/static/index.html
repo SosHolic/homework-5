@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My Application</title>
+</head>
+<body>
+<script src="mithril.js"></script>
+
+<script>
+
+var User = {
+    list: [],
+    loadList: function() {
+        return m.request({
+            method: "GET",
+            url: "http://localhost:8080/persons"
+        })
+        .then(function(result) {
+            User.list = result
+        })
+    },
+}
+
+var UserList = {
+    oninit: User.loadList,
+    view: function() {
+        return m(".user-list", User.list.map(function(user) {
+            return m(".user-list-item", user.name + " " + user.surname)
+        }))
+    }
+}
+
+m.mount(document.body, UserList)
+
+
+</script>
+
+
+</body>
+</html>
